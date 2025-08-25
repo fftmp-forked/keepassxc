@@ -110,7 +110,7 @@ public:
     QString notes() const;
     QString attribute(const QString& key) const;
     QString totp(bool* isValid = nullptr) const;
-    QString getNewOtp();
+    QString getNewOtp() const;
     QString totpSettingsString() const;
     QSharedPointer<Totp::Settings> totpSettings() const;
     Group* previousParentGroup();

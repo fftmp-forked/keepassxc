@@ -639,7 +639,7 @@ AutoType::parseSequence(const QString& entrySequence, const Entry* entry, QStrin
         } else if (placeholder == "totp") {
             if (entry->hasValidTotp()) {
                 // Entry totp (requires special handling)
-                QString totp = entry->totp();
+                QString totp = entry->getNewOtp();
                 for (const auto& ch : totp) {
                     actions << QSharedPointer<AutoTypeKey>::create(ch);
                 }
