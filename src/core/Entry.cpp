@@ -595,6 +595,11 @@ void Entry::removePasskey()
     removeTag(tr("Passkey"));
 }
 
+bool Entry::hasHotp() const
+{
+    return !m_data.totpSettings.isNull() && m_data.totpSettings->type == Totp::OtpType::HOTP;
+}
+
 QString Entry::totp(bool* isValid) const
 {
     if (hasTotp()) {
@@ -602,6 +607,21 @@ QString Entry::totp(bool* isValid) const
     }
     if (isValid) {
         *isValid = false;
+    }   
+    return {};
+}
+
+/// @details implicitly edit DB and save it (for HOTP). This need to store new value of counter.
+/// @return TOTP/HOTP code.
+QString Entry::getNewOtp()
+{
+    if (hasTotp()) {
+        auto res = Totp::generateTotp(m_data.totpSettings);
+        if(hasHotp()) {
+            ++m_data.totpSettings->counter;
+            setTotp(m_data.totpSettings);
+        }
+        return res;
     }
     return {};
 }
@@ -1749,6 +1769,7 @@ bool EntryData::equals(const EntryData& other, CompareItemOptions options) const
             return false;
         }
         if (::compare(totpSettings->step, other.totpSettings->step, options) != 0) {
+            // HOTP counter compared also
             return false;
         }
     } else if (totpSettings.isNull() != other.totpSettings.isNull()) {

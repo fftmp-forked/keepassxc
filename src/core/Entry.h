@@ -110,6 +110,7 @@ public:
     QString notes() const;
     QString attribute(const QString& key) const;
     QString totp(bool* isValid = nullptr) const;
+    QString getNewOtp();
     QString totpSettingsString() const;
     QSharedPointer<Totp::Settings> totpSettings() const;
     Group* previousParentGroup();
@@ -124,9 +125,9 @@ public:
 
     bool hasPasskey() const;
     void removePasskey();
-
     bool hasTotp() const;
     bool hasValidTotp() const;
+    bool hasHotp() const;
     bool isExpired() const;
     bool willExpireInDays(int days) const;
     void expireNow();
